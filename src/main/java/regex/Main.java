@@ -38,9 +38,20 @@ public class Main {
      * @return whether the string satisfies the password requirements
      */
     public static boolean checkForPassword(String str, int minLength) {
-        final boolean propertyOne = Pattern.matches("REPLACE WITH CORRECT REGEX", str);
-        // as needed, modify this code.
-        return propertyOne;
+        // Handle null input
+        if (str == null) {
+            return false;
+        }
+        // Check for at least one lowercase letter
+        final boolean hasLowercase = Pattern.matches(".*[a-z].*", str);
+        // Check for at least one uppercase letter
+        final boolean hasUppercase = Pattern.matches(".*[A-Z].*", str);
+        // Check for at least one digit
+        final boolean hasDigit = Pattern.matches(".*[0-9].*", str);
+        // Check for minimum length (also ensures non-empty when minLength >= 1)
+        final boolean meetsLength = str.length() >= minLength;
+
+        return hasLowercase && hasUppercase && hasDigit && meetsLength;
     }
 
     // Method 2 for checking if a string conforms to a regex: using Matcher.find
@@ -55,9 +66,14 @@ public class Main {
      * @return a list containing the email addresses in the string.
      */
     public static List<String> extractEmails(String str) {
-        final Pattern pattern = Pattern.compile("REPLACE WITH CORRECT REGEX");
-        final Matcher matcher = pattern.matcher(str);
         final List<String> result = new ArrayList<>();
+        // Handle null input
+        if (str == null) {
+            return result;
+        }
+        // Match at least one word character before @, then either @mail.utoronto.ca or @utoronto.ca
+        final Pattern pattern = Pattern.compile("[a-zA-Z0-9._%+-]+@(mail\\.)?utoronto\\.ca");
+        final Matcher matcher = pattern.matcher(str);
         while (matcher.find()) {
             result.add(matcher.group());
         }
@@ -76,6 +92,12 @@ public class Main {
      * @return whether str contains the same capital letter twice.
      */
     public static boolean checkForDoubles(String str) {
-        return str.matches("replace with correct regex");
+        // Handle null input
+        if (str == null) {
+            return false;
+        }
+        // Use a backreference: capture a capital letter, then match anything in between,
+        // then match the same capital letter again using \1
+        return str.matches(".*([A-Z]).*\\1.*");
     }
 }
